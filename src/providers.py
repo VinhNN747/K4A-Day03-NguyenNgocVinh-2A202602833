@@ -38,25 +38,54 @@ class MockOfflineProvider(BaseLLMProvider):
         prompt_lower = prompt.lower()
         
         # Mô phỏng nhận diện intent gọi Tool
-        if "sv2026001" in prompt_lower and "đặt lịch" in prompt_lower:
+        if "kiểm tra ticket" in prompt_lower and "observation:" not in prompt_lower:
             return {
                 "type": "tool_call",
-                "tool_name": "schedule_appointment",
-                "arguments": {"student_id": "SV2026001", "datetime_str": "14:00 15/09/2026", "advisor_name": "PGS.TS Nguyễn Văn A"},
-                "thought": "Người dùng yêu cầu đặt lịch hẹn tư vấn cho sinh viên SV2026001. Tôi sẽ gọi tool schedule_appointment."
+                "tool_name": "helpdesk_query",
+                "arguments": {"query": "IT-1001"},
+                "thought": "Tôi cần kiểm tra trạng thái ticket trước khi quyết định có tạo yêu cầu mới hay không."
             }
-        elif "sv2026001" in prompt_lower or "tra cứu" in prompt_lower:
+        if "ticket đang mở" in prompt_lower or "ticket chưa đóng" in prompt_lower:
             return {
                 "type": "tool_call",
-                "tool_name": "academic_query",
-                "arguments": {"student_id": "SV2026001"},
-                "thought": "Người dùng muốn tra cứu thông tin học vụ của sinh viên SV2026001. Tôi sẽ gọi tool academic_query."
+                "tool_name": "list_open_tickets",
+                "arguments": {"requester": "Nguyễn Ngọc Vĩnh" if "vĩnh" in prompt_lower else ""},
+                "thought": "Người dùng muốn xem danh sách ticket chưa đóng. Tôi sẽ gọi tool list_open_tickets."
+            }
+        if "cập nhật trạng thái" in prompt_lower or "đóng ticket" in prompt_lower:
+            return {
+                "type": "tool_call",
+                "tool_name": "update_ticket_status",
+                "arguments": {"ticket_id": "IT-1001", "status": "Đã đóng", "note": "Đã xử lý xong yêu cầu."},
+                "thought": "Người dùng muốn cập nhật trạng thái ticket. Tôi sẽ gọi tool update_ticket_status."
+            }
+        if "mở khóa tài khoản" in prompt_lower or "reset mật khẩu" in prompt_lower:
+            return {
+                "type": "tool_call",
+                "tool_name": "reset_account_access",
+                "arguments": {"account": "minhanh@example.com", "action": "unlock" if "mở khóa" in prompt_lower else "reset_password"},
+                "thought": "Người dùng yêu cầu xử lý quyền truy cập tài khoản. Tôi sẽ gọi tool reset_account_access."
+            }
+        if any(keyword in prompt_lower for keyword in ["tạo ticket", "tạo yêu cầu", "không vào được", "bị lỗi mạng"]):
+            return {
+                "type": "tool_call",
+                "tool_name": "create_support_request",
+                "arguments": {"requester": "Nguyễn Ngọc Vĩnh", "issue_type": "Mạng", "description": prompt, "priority": "high"},
+                "thought": "Người dùng mô tả sự cố kỹ thuật cần được tiếp nhận. Tôi sẽ tạo ticket hỗ trợ qua Helpdesk."
+            }
+        elif "it-1001" in prompt_lower or "vinh@example.com" in prompt_lower or "tra cứu" in prompt_lower or "ticket" in prompt_lower or "tài khoản" in prompt_lower:
+            query = "IT-9999" if "it-9999" in prompt_lower else ("IT-1001" if "it-1001" in prompt_lower else "vinh@example.com")
+            return {
+                "type": "tool_call",
+                "tool_name": "helpdesk_query",
+                "arguments": {"query": query},
+                "thought": "Người dùng muốn tra cứu dữ liệu Helpdesk. Tôi sẽ gọi tool helpdesk_query."
             }
         else:
             return {
                 "type": "text",
-                "content": f"[Mock Agent Response]: Xin chào! Quy chế học vụ VinUni yêu cầu sinh viên tích lũy tối thiểu 120 tín chỉ và duy trì GPA trên 2.0 để tốt nghiệp.",
-                "thought": "Câu hỏi chung về quy chế học vụ, trả lời trực tiếp không cần gọi Tool."
+                "content": "Bạn có thể hỏi về cách xử lý lỗi mạng, tài khoản hoặc phần mềm. Với ticket cụ thể, hãy cung cấp mã ticket để tôi tra cứu.",
+                "thought": "Câu hỏi chung về hỗ trợ kỹ thuật, trả lời trực tiếp không cần gọi Tool."
             }
 
 
