@@ -2,57 +2,36 @@
   {
     "id": "TC01",
     "type": "direct_query",
-    "question": "Tôi nên làm gì khi không kết nối được Wi-Fi?",
-    "expected_behavior": "Agent tra loi huong dan chung, khong can goi Tool.",
+    "question": "Chào bạn, bạn có thể giới thiệu quy chế học vụ cơ bản của Đại học VinUni không?",
+    "expected_behavior": "Chatbot trả lời trực tiếp từ System Prompt, không cần gọi bất kỳ Tool nào.",
     "complexity": "Low"
   },
   {
     "id": "TC02",
     "type": "single_tool_query",
-    "question": "Hãy tra cứu ticket IT-1001.",
-    "expected_behavior": "Agent goi helpdesk_query voi query IT-1001.",
+    "question": "Hãy tra cứu thông tin học vụ của sinh viên SV2026001.",
+    "expected_behavior": "Agent nhận diện nhu cầu tra cứu, tự động phát sinh Tool Call 'academic_query' với mã SV2026001.",
     "complexity": "Medium"
   },
   {
     "id": "TC03",
-    "type": "support_request_creation",
-    "question": "Tạo ticket hỗ trợ vì tôi không đăng nhập được tài khoản.",
-    "expected_behavior": "Agent goi create_support_request.",
+    "type": "appointment_booking",
+    "question": "TODO: [Học viên tự viết câu hỏi yêu cầu Agent đặt lịch hẹn tư vấn học vụ]",
+    "expected_behavior": "Agent tự động phát sinh Tool Call 'schedule_appointment' với đúng thời gian và thông tin sinh viên.",
     "complexity": "Medium"
   },
   {
     "id": "TC04",
     "type": "multi_step_reasoning",
-    "question": "Kiểm tra ticket IT-1001 và tạo yêu cầu mới nếu sự cố Wi-Fi vẫn chưa được xử lý.",
-    "expected_behavior": "Agent tra cuu ticket roi moi quyet dinh tao yeu cau moi.",
+    "question": "TODO: [Học viên tự viết câu hỏi yêu cầu Agent suy luận ReAct đa bước (Tra cứu -> Đặt lịch với Cố vấn)]",
+    "expected_behavior": "Agent thực hiện chuỗi suy luận ReAct: Tra cứu cố vấn học tập của sinh viên trước, sau đó tiến hành đặt lịch hẹn.",
     "complexity": "High"
   },
   {
     "id": "TC05",
     "type": "edge_case_handling",
-    "question": "Hãy tra cứu ticket IT-9999.",
-    "expected_behavior": "Agent nhan NOT_FOUND va khong bia dat du lieu.",
-    "complexity": "Medium"
-  },
-  {
-    "id": "TC06",
-    "type": "list_open_tickets",
-    "question": "Liệt kê các ticket đang mở của Nguyễn Ngọc Vĩnh.",
-    "expected_behavior": "Agent goi list_open_tickets.",
-    "complexity": "Medium"
-  },
-  {
-    "id": "TC07",
-    "type": "update_ticket",
-    "question": "Cập nhật trạng thái ticket IT-1001 thành Đã đóng.",
-    "expected_behavior": "Agent goi update_ticket_status.",
-    "complexity": "Medium"
-  },
-  {
-    "id": "TC08",
-    "type": "account_recovery",
-    "question": "Mở khóa tài khoản minhanh@example.com.",
-    "expected_behavior": "Agent goi reset_account_access voi action unlock.",
+    "question": "TODO: [Học viên tự viết câu hỏi tra cứu mã sinh viên không tồn tại (ví dụ SV9999999)]",
+    "expected_behavior": "Agent nhận kết quả NOT_FOUND từ Tool và đưa ra phản hồi lịch sự, chính xác không bịa đặt dữ liệu.",
     "complexity": "Medium"
   }
 ]
